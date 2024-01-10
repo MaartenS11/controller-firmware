@@ -1,4 +1,9 @@
 #include <hardware/hardware-manager.hpp>
+#include <hardware/actuator/motor/ev3-large-motor.hpp>
+#include <module/module-output.hpp>
+
+#include <../../controller/stm-hal/hal-gpio.hpp>
+#include <../../controller/stm-hal/hal-adc.hpp>
 
 // ------------------------------------------------------------------------------------
 //                                      PUBLIC API
@@ -22,6 +27,18 @@ void HardwareManager::init()
         .imu_update_interval = 5,
         .button_update_interval = 5,
     };
+    /*m_lego_motors[static_cast<uint8_t>(Lego_Motor_Port::ACTUATOR_A)] = new EV3LargeMotor(new OutputPort(
+        {
+            .pin5_adc_enable_n_io = MOTORA_PIN5_DETECT_IO,
+            .pin6_adc_enable_n_io = MOTORA_PIN6_DETECT_IO,
+            .encoder_id = TIMER_TYPE_MOTOR_A_ENCODER,
+            .motor_pwm_id = TIMER_TYPE_MOTOR_A_PWM,
+            .fault_io = MOTORAB_FAULT_N_IO,
+            .adc_pin5_channel = ADC_CHANNEL_TYPE_PORT_OUTPUT1_PIN5,
+            .adc_pin6_channel = ADC_CHANNEL_TYPE_PORT_OUTPUT1_PIN6,
+            .invert_encoder_polarity = false,
+        }
+    ), TimerType::TIMER_TYPE_MOTOR_A_PWM, TimerType::TIMER_TYPE_MOTOR_A_ENCODER);*/
 }
 
 /**

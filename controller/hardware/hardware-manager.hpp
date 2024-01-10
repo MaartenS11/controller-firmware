@@ -11,6 +11,12 @@
 #include <button/board-buttons.hpp>
 #include <mutex>
 
+#include <hardware/actuator/motor/ev3-large-motor.hpp>
+#include <module/module-output.hpp>
+
+#include <../../controller/stm-hal/hal-gpio.hpp>
+#include <../../controller/stm-hal/hal-adc.hpp>
+
 static constexpr uint16_t PORT_COUNT = 4;
 
 enum class Lego_Motor_Port
@@ -62,12 +68,23 @@ class HardwareManager
         Buttons& get_buttons();
 
     private:
-
         Hardware_Config m_hardware_config;
+
+        OutputPort port = OutputPort({
+                .pin5_adc_enable_n_io = MOTORA_PIN5_DETECT_IO,
+                .pin6_adc_enable_n_io = MOTORA_PIN6_DETECT_IO,
+                .encoder_id = TIMER_TYPE_MOTOR_A_ENCODER,
+                .motor_pwm_id = TIMER_TYPE_MOTOR_A_PWM,
+                .fault_io = MOTORAB_FAULT_N_IO,
+                .adc_pin5_channel = ADC_CHANNEL_TYPE_PORT_OUTPUT1_PIN5,
+                .adc_pin6_channel = ADC_CHANNEL_TYPE_PORT_OUTPUT1_PIN6,
+                .invert_encoder_polarity = false,
+            });
+        EV3LargeMotor motor = EV3LargeMotor(&port, TimerType::TIMER_TYPE_MOTOR_A_PWM, TimerType::TIMER_TYPE_MOTOR_A_ENCODER);
 
         std::array<LegoMotor*, PORT_COUNT> m_lego_motors =
         {
-            nullptr,
+            &motor,
             nullptr,
             nullptr,
             nullptr
